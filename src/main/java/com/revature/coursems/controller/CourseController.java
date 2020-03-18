@@ -41,7 +41,7 @@ public class CourseController {
 
 		System.out.print(course.getName());
 		courseService.saveCourse(course);
-		return new ResponseEntity<>("Course save successfully", HttpStatus.OK);
+		return new ResponseEntity<>("", HttpStatus.OK);
 
 	}
 
@@ -101,7 +101,7 @@ public class CourseController {
 	public ResponseEntity<?> switchStatus(@PathVariable int id)  {
 		
 		courseService.switchStatus(id);
-		return new ResponseEntity<>("updation successful", HttpStatus.OK);
+		return new ResponseEntity<>("", HttpStatus.OK);
 	}
 
 }
