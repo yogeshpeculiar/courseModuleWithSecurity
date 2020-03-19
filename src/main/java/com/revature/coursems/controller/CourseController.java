@@ -67,7 +67,7 @@ public class CourseController {
 		return new ResponseEntity<>("updation successful", HttpStatus.OK);
 	}
 	
-	@GetMapping("/getCourseById/{id}")
+	@GetMapping("/viewCourseById/{id}")
 	public ResponseEntity<?> getCourseById(@PathVariable int id ){
 		Course course=courseService.getCourseById(id);
 		return new ResponseEntity<>(course, HttpStatus.OK);

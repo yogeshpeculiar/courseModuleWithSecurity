@@ -96,10 +96,11 @@ public class CourseRepositoryImpl implements CourseRepository {
 	@Override
 	public Course findCourseById(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
-		Course obj = session.get(Course.class, id);
-		session.getTransaction().commit();
-		session.close();
-		return obj;
+		List<Course> courses = session.createQuery(
+					"SELECT cou FROM Course cou JOIN FETCH cou.categoryObj cat JOIN FETCH cou.levelObj lvl where cou.id="+id,
+					Course.class).getResultList();
+					
+		return courses.get(0);
 	}
 
 	@Override
