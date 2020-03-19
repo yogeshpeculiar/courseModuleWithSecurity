@@ -109,8 +109,8 @@ public class CourseRepositoryImpl implements CourseRepository {
 		Session session = this.sessionFactory.getCurrentSession();
 		try {
 			course.getDocObj().forEach(docObj -> docObj.setCourse(course));
-			course.getCourseSubscribedVideo()
-					.forEach(courseSubscribedVideoObj -> courseSubscribedVideoObj.setCourse(course));
+			if(course.getCourseSubscribedVideo()!=null)
+			course.getCourseSubscribedVideo().forEach(courseSubscribedVideoObj -> courseSubscribedVideoObj.setCourse(course));
 
 			session.beginTransaction();
 			// Course updatedCourse = (Course) session.merge(course);
