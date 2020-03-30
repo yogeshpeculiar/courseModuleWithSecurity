@@ -19,6 +19,16 @@
             "mainClass": "com.revature.coursems.CourseMsApplication",
             "projectName": "courseModified-dev",
             "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-CourseMsApplication<courseModuleUsingRest>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.revature.coursems.CourseMsApplication",
+            "projectName": "courseModuleUsingRest",
+            "args": ""
         }
     ]
 }

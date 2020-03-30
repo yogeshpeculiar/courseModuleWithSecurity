@@ -8,10 +8,15 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.mysql.cj.Query;
 import com.revature.coursems.domain.Category;
 import com.revature.coursems.domain.Course;
+import com.revature.coursems.domain.CourseSubscribedVideo;
+import com.revature.coursems.domain.Doc;
 import com.revature.coursems.repository.CourseRepository;
 import com.revature.coursems.domain.Level;
+import com.revature.coursems.domain.Login;
+import com.revature.coursems.domain.Video;
 
 import exception.DatabaseServiceException;
 
@@ -33,17 +38,20 @@ public class CourseRepositoryImpl implements CourseRepository {
 			// session.save(course);
 			// here course details are inserted into the courseSubscribedVido
 			if (course.getCourseSubscribedVideo() != null)
-			course.getCourseSubscribedVideo().forEach(courseSubscribedVideoObj -> courseSubscribedVideoObj.setCourse(course));
+				course.getCourseSubscribedVideo()
+						.forEach(courseSubscribedVideoObj -> courseSubscribedVideoObj.setCourse(course));
 			session.save(course);
+
 			// Here changes get permanent
 			session.getTransaction().commit();
-
+			session.close();
 		}
 
 		catch (HibernateException e) {
-			throw new DatabaseServiceException("Database service exception -- exception in saveCourse");
-		} finally {
-			session.close();
+			throw new DatabaseServiceException(e.getMessage());
+		}
+		finally {
+
 		}
 
 	}
@@ -64,7 +72,7 @@ public class CourseRepositoryImpl implements CourseRepository {
 			return courses;
 			// return session.createQuery("From Course",Course.class).getResultList();
 		} catch (HibernateException e) {
-			throw new DatabaseServiceException("Database service exception -- exeption in findAllCOurses");
+			throw new DatabaseServiceException(e.getMessage());
 		}
 
 	}
@@ -97,9 +105,10 @@ public class CourseRepositoryImpl implements CourseRepository {
 	public Course findCourseById(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
 		List<Course> courses = session.createQuery(
-					"SELECT cou FROM Course cou JOIN FETCH cou.categoryObj cat JOIN FETCH cou.levelObj lvl where cou.id="+id,
-					Course.class).getResultList();
-					
+				"SELECT cou FROM Course cou JOIN FETCH cou.categoryObj cat JOIN FETCH cou.levelObj lvl where cou.id="
+						+ id,
+				Course.class).getResultList();
+
 		return courses.get(0);
 	}
 
@@ -109,8 +118,9 @@ public class CourseRepositoryImpl implements CourseRepository {
 		Session session = this.sessionFactory.getCurrentSession();
 		try {
 			course.getDocObj().forEach(docObj -> docObj.setCourse(course));
-			if(course.getCourseSubscribedVideo()!=null)
-			course.getCourseSubscribedVideo().forEach(courseSubscribedVideoObj -> courseSubscribedVideoObj.setCourse(course));
+			if (course.getCourseSubscribedVideo() != null)
+				course.getCourseSubscribedVideo()
+						.forEach(courseSubscribedVideoObj -> courseSubscribedVideoObj.setCourse(course));
 
 			session.beginTransaction();
 			// Course updatedCourse = (Course) session.merge(course);
@@ -158,7 +168,7 @@ public class CourseRepositoryImpl implements CourseRepository {
 		session.beginTransaction();
 		Level level = session.get(Level.class, id);
 		session.getTransaction().commit();
-		session.close();
+		// session.close();
 
 		return level;
 	}
@@ -169,8 +179,62 @@ public class CourseRepositoryImpl implements CourseRepository {
 		session.beginTransaction();
 		Category category = session.get(Category.class, id);
 		session.getTransaction().commit();
-		session.close();
+		// session.close();
 		return category;
 	}
+
+	@Override
+	public List<Doc> viewDocByCourseId(int id) {
+		Session session = this.sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		List<Doc> listOfDocs = session.createQuery("SELECT doc FROM Doc doc where doc.course.id=" + id, Doc.class)
+				.getResultList();
+		return listOfDocs;
+	}
+	@Override
+	public List<CourseSubscribedVideo> viewVideoByCourseId(int id) {
+		Session session = this.sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		List<CourseSubscribedVideo> listOfCourseSubscribedVideos = session.createQuery("SELECT csv FROM CourseSubscribedVideo csv where csv.course.id=" + id, CourseSubscribedVideo.class)
+				.getResultList();
+		return listOfCourseSubscribedVideos;
+	}
+
+	
+	@Override
+	public String deleteCourseVideoMappingById(int id)  {
+		Session session = this.sessionFactory.getCurrentSession();
+		session.beginTransaction();
+			CourseSubscribedVideo courseSubscribedVideo = session.get(CourseSubscribedVideo.class, id);
+			if (courseSubscribedVideo != null) {
+				session.delete(courseSubscribedVideo);
+				session.getTransaction().commit();
+				session.close();
+				return "deletion successful";
+			} else
+				return "deletion failed as the requested object doesnt exists";
+		}
+
+	@Override
+	public String login(Login login) {
+		Session session = this.sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		// Query query=session.createQuery("SELECT login FROM Login login where
+		// login.userId=:userId");
+
+		// List<Login> l=
+		String password = session
+				.createQuery("SELECT login.password FROM Login login where login.userId=" + login.getUserId(),
+						Login.class)
+				.toString();
+		// String password=l.get(0).getPassword();
+		if (password.equals(login.getPassword()))
+			return "login successful";
+		else
+			return "login failed";
+
+	}
+
+
 
 }

@@ -19,10 +19,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.revature.coursems.domain.Category;
 import com.revature.coursems.domain.Course;
+import com.revature.coursems.domain.CourseSubscribedVideo;
+import com.revature.coursems.domain.Doc;
 import com.revature.coursems.domain.Level;
+import com.revature.coursems.domain.Video;
+import com.revature.coursems.domain.VideoCopy;
+import com.revature.coursems.domain.updateDTO;
 import com.revature.coursems.service.CourseService;
 
 import exception.BusinessServiceException;
@@ -61,9 +67,9 @@ public class CourseController {
 
 	//@ExceptionHandler(BusinessServiceException.class)
 	@PutMapping("")
-	public ResponseEntity<?> update(@RequestBody Course course) throws BusinessServiceException {
-		System.out.println(course.getId());
-		courseService.update(course);
+	public ResponseEntity<?> update(@RequestBody updateDTO updateDTOObj) throws BusinessServiceException {
+		// System.out.println(course.getId());
+		courseService.update(updateDTOObj);
 		return new ResponseEntity<>("updation successful", HttpStatus.OK);
 	}
 	
@@ -103,5 +109,27 @@ public class CourseController {
 		courseService.switchStatus(id);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
+	@GetMapping("/viewDocByCourseId/{id}")
+	public  ResponseEntity<?> viewDocByCourseId(@PathVariable int id){
+		List<Doc> listOfDocs=courseService.viewDocByCourseId(id);
+		return new ResponseEntity<>(listOfDocs, HttpStatus.OK);
+	}
+	@GetMapping("/viewVideoByCourseId/{id}")
+	public  ResponseEntity<?> viewVideoByCourseId(@PathVariable int id){
+		List<CourseSubscribedVideo> listOfCourseSubscribedVideos=courseService.viewVideoByCourseId(id);
+		return new ResponseEntity<>(listOfCourseSubscribedVideos, HttpStatus.OK);
+	}
+	@GetMapping("/login/{userId}/{password}")
+	public  ResponseEntity<?> login(@PathVariable String userId,@PathVariable String password){
+		String loginStatus=courseService.login(userId,password);
+		return new ResponseEntity<>(loginStatus, HttpStatus.OK);
+	}
+
+	@DeleteMapping("deleteCourseVideoMappingById/{id}")
+	public ResponseEntity<?> deleteCourseVideoMappingById(@PathVariable int id) throws BusinessServiceException {
+		String deletionStatus = courseService.deleteCourseVideoMappingById(id);
+		return new ResponseEntity<>(deletionStatus, HttpStatus.OK);
+	}
+	
 
 }

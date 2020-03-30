@@ -62,8 +62,14 @@ public class Course implements Serializable {
 	private Boolean isActive;
 	@Column(name = "is_level_override")
 	private Boolean isLevelOverride;
-	@Column(name = "available_for")
-	private Boolean availableFor;
+
+	@Column(name = "pre_signup")
+	private Boolean isPreSignUp;
+	@Column(name = "via_slug_login")
+	private Boolean isSlugLogin;
+	@Column(name = "dashboard")
+	private Boolean isDashboard;
+	
 	private String description;
 	@Column(name = "meta_key")
 	private String metaKey;
@@ -179,13 +185,6 @@ public class Course implements Serializable {
 		this.isLevelOverride = isLevelOverride;
 	}
 
-	public Boolean getAvailableFor() {
-		return availableFor;
-	}
-
-	public void setAvailableFor(Boolean availableFor) {
-		this.availableFor = availableFor;
-	}
 
 	public String getDescription() {
 		return description;
@@ -267,13 +266,46 @@ public class Course implements Serializable {
 		this.categoryObj = categoryObj;
 	}
 
-	@Override
-	public String toString() {
-		return "Course [id=" + id + ", name=" + name + ", levelObj=" + levelObj + ", categoryObj=" + categoryObj
-				+ ", DocObj=" + docObj + ", tag=" + tag + ", slug=" + slug + ", isLevelOverride=" + isLevelOverride
-				+ ", availableFor=" + availableFor + ", description=" + description + ", metaKey=" + metaKey
-				+ ", metaDesc=" + metaDesc + ", course_icon=" + course_icon + ", createdBy=" + createdBy
-				+ ", modifiedBy=" + modifiedBy + ", cratedOn=" + createdOn + ", modifiedOn=" + modifiedOn + "]";
+	public Boolean getIsPreSignUp() {
+		return isPreSignUp;
 	}
 
+	public void setIsPreSignUp(Boolean isPreSignUp) {
+		this.isPreSignUp = isPreSignUp;
+	}
+
+	public Boolean getIsSlugLogin() {
+		return isSlugLogin;
+	}
+
+	public void setIsSlugLogin(Boolean isSlugLogin) {
+		this.isSlugLogin = isSlugLogin;
+	}
+
+	public Boolean getIsDashboard() {
+		return isDashboard;
+	}
+
+	public void setIsDashboard(Boolean isDashboard) {
+		this.isDashboard = isDashboard;
+	}
+
+	@Override
+	public String toString() {
+		return "Course [categoryObj=" + categoryObj + ", completionActivityPoints=" + completionActivityPoints
+				+ ", courseSubscribedVideo=" + courseSubscribedVideo + ", course_icon=" + course_icon + ", createdBy="
+				+ createdBy + ", createdOn=" + createdOn + ", description=" + description + ", docObj=" + docObj
+				+ ", enrollmentActivityPoints=" + enrollmentActivityPoints + ", id=" + id + ", isActive=" + isActive
+				+ ", isDashboard=" + isDashboard + ", isLevelOverride=" + isLevelOverride + ", isPreSignUp="
+				+ isPreSignUp + ", isSlugLogin=" + isSlugLogin + ", levelObj=" + levelObj + ", metaDesc=" + metaDesc
+				+ ", metaKey=" + metaKey + ", modifiedBy=" + modifiedBy + ", modifiedOn=" + modifiedOn + ", name="
+				+ name + ", slug=" + slug + ", tag=" + tag + ", version=" + version + "]";
+	}
+
+	
+	
 }
+
+
+
+
