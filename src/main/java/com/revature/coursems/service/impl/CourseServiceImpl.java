@@ -18,6 +18,7 @@ import com.revature.coursems.domain.Doc;
 
 import exception.BusinessServiceException;
 import exception.DatabaseServiceException;
+import java.sql.Timestamp;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -27,6 +28,8 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public void saveCourse(Course course) throws BusinessServiceException {
 		try {
+			Timestamp timestamp=new Timestamp(System.currentTimeMillis());
+			course.setCreatedOn(timestamp);
 			courseRepository.saveCourse(course);
 		} catch (DatabaseServiceException e) {
 			throw new BusinessServiceException(e.getMessage());
@@ -82,10 +85,15 @@ public class CourseServiceImpl implements CourseService {
 			course.setCreatedBy(updateDTOObj.getCreatedBy());
 			course.setModifiedBy(updateDTOObj.getModifiedBy());
 			course.setCreatedOn(updateDTOObj.getCreatedOn());
-			course.setModifiedOn(updateDTOObj.getModifiedOn());
+			System.err.println("created time is:"+course.getCreatedOn());
+			// course.setModifiedOn(updateDTOObj.getModifiedOn());
 			course.setVersion(updateDTOObj.getVersion());
 			course.setCompletionActivityPoints(updateDTOObj.getCompletionActivityPoints());
 			course.setEnrollmentActivityPoints(updateDTOObj.getEnrollmentActivityPoints());
+			
+			Timestamp timestamp=new Timestamp(System.currentTimeMillis());
+			course.setModifiedOn(timestamp);
+
 			courseRepository.update(course);
 		} catch (DatabaseServiceException e) {
 			throw new BusinessServiceException("BusinessServiceException -- update");

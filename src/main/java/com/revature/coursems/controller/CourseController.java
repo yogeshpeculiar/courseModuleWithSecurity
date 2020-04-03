@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+// import org.springframework.security.authentication.AuthenticationManager;
+// import org.springframework.security.authentication.BadCredentialsException;
+// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+// import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.revature.coursems.domain.AuthenticationRequest;
+import com.revature.coursems.domain.AuthenticationResponse;
 import com.revature.coursems.domain.Category;
 import com.revature.coursems.domain.Course;
 import com.revature.coursems.domain.CourseSubscribedVideo;
@@ -29,17 +35,26 @@ import com.revature.coursems.domain.Level;
 import com.revature.coursems.domain.Video;
 import com.revature.coursems.domain.VideoCopy;
 import com.revature.coursems.domain.updateDTO;
+// import com.revature.coursems.securityConfig.MyUserDetailsService;
 import com.revature.coursems.service.CourseService;
+// import com.revature.coursems.util.JwtUtil;
 
 import exception.BusinessServiceException;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/courses")
+ @RequestMapping("/courses")
 
 public class CourseController {
 	@Autowired
 	private CourseService courseService;
+	// @Autowired
+	// private AuthenticationManager authenticationManager;
+	// @Autowired 
+	// private MyUserDetailsService myUserDetailsService;
+	// @Autowired
+	// private JwtUtil jwtUtil;
+
 
 	//@ExceptionHandler(BusinessServiceException.class)
 	@PostMapping()
@@ -119,17 +134,28 @@ public class CourseController {
 		List<CourseSubscribedVideo> listOfCourseSubscribedVideos=courseService.viewVideoByCourseId(id);
 		return new ResponseEntity<>(listOfCourseSubscribedVideos, HttpStatus.OK);
 	}
-	@GetMapping("/login/{userId}/{password}")
-	public  ResponseEntity<?> login(@PathVariable String userId,@PathVariable String password){
-		String loginStatus=courseService.login(userId,password);
-		return new ResponseEntity<>(loginStatus, HttpStatus.OK);
-	}
+	// @PostMapping("/authenticate")
+	// public  ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
+	
+	// 	try
+	// 	{
+	// 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword()));
+	// 	}
+	// 	catch(BadCredentialsException e){
+	// 		throw new Exception("Incorrect Credentials..");
+	// 	}
+	// 	final UserDetails userDetails=myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+	// 	final String jwt= jwtUtil.generateToken(userDetails);
+	// 	return ResponseEntity.ok(new AuthenticationResponse(jwt));
+
+	// }
 
 	@DeleteMapping("deleteCourseVideoMappingById/{id}")
 	public ResponseEntity<?> deleteCourseVideoMappingById(@PathVariable int id) throws BusinessServiceException {
 		String deletionStatus = courseService.deleteCourseVideoMappingById(id);
 		return new ResponseEntity<>(deletionStatus, HttpStatus.OK);
 	}
+
 	
 
 }

@@ -1,6 +1,8 @@
 package com.revature.coursems.repository;
 
+import java.lang.StackWalker.Option;
 import java.util.List;
+import java.util.Optional;
 
 import com.revature.coursems.domain.Category;
 import com.revature.coursems.domain.Course;
@@ -8,6 +10,7 @@ import com.revature.coursems.domain.CourseSubscribedVideo;
 import com.revature.coursems.domain.Doc;
 import com.revature.coursems.domain.Level;
 import com.revature.coursems.domain.Login;
+import com.revature.coursems.domain.User;
 import com.revature.coursems.domain.Video;
 
 import exception.DatabaseServiceException;
@@ -28,4 +31,5 @@ public interface CourseRepository   {
 	public String login(Login login);
 	public List<CourseSubscribedVideo> viewVideoByCourseId(int id);
 	public String deleteCourseVideoMappingById(int id);
+	public Optional<User> loadUserByName(String name);
 }

@@ -1,6 +1,7 @@
 package com.revature.coursems.domain;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
+
 import java.util.List;
 
 public class updateDTO {
@@ -23,8 +24,8 @@ public class updateDTO {
     private String course_icon;
     private String createdBy;
     private String modifiedBy;
-    private LocalDate createdOn;
-    private LocalDate modifiedOn;
+    private Timestamp createdOn;
+    private Timestamp modifiedOn;
     private int version;
     private int completionActivityPoints;
     private int enrollmentActivityPoints;
@@ -157,21 +158,7 @@ public class updateDTO {
         this.modifiedBy = modifiedBy;
     }
 
-    public LocalDate getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(LocalDate createdOn) {
-        this.createdOn = createdOn;
-    }
-
-    public LocalDate getModifiedOn() {
-        return modifiedOn;
-    }
-
-    public void setModifiedOn(LocalDate modifiedOn) {
-        this.modifiedOn = modifiedOn;
-    }
+  
 
     public int getVersion() {
         return version;
@@ -219,6 +206,22 @@ public class updateDTO {
 
     public void setIsDashboard(Boolean isDashboard) {
         this.isDashboard = isDashboard;
+    }
+
+    public Timestamp getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Timestamp createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Timestamp getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(Timestamp modifiedOn) {
+        this.modifiedOn = modifiedOn;
     }
 
  

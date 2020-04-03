@@ -22,9 +22,12 @@ public class DatasourceConfig {
         hibernateProperties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         hibernateProperties.put("hibernate.show_sql", true);
         hibernateProperties.put("hibernate.hbm2ddl.auto", "none");
+        hibernateProperties.put("hibernate.format_sql",true);
         sessionFactory.setHibernateProperties(hibernateProperties);
         return sessionFactory;
     }
+
+    
 
     @Bean
     public DataSource dataSource() {

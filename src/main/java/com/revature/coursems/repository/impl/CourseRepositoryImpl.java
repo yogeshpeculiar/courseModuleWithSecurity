@@ -1,6 +1,8 @@
 package com.revature.coursems.repository.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -16,6 +18,7 @@ import com.revature.coursems.domain.Doc;
 import com.revature.coursems.repository.CourseRepository;
 import com.revature.coursems.domain.Level;
 import com.revature.coursems.domain.Login;
+import com.revature.coursems.domain.User;
 import com.revature.coursems.domain.Video;
 
 import exception.DatabaseServiceException;
@@ -49,8 +52,7 @@ public class CourseRepositoryImpl implements CourseRepository {
 
 		catch (HibernateException e) {
 			throw new DatabaseServiceException(e.getMessage());
-		}
-		finally {
+		} finally {
 
 		}
 
@@ -191,34 +193,36 @@ public class CourseRepositoryImpl implements CourseRepository {
 				.getResultList();
 		return listOfDocs;
 	}
+
 	@Override
 	public List<CourseSubscribedVideo> viewVideoByCourseId(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
 		session.beginTransaction();
-		List<CourseSubscribedVideo> listOfCourseSubscribedVideos = session.createQuery("SELECT csv FROM CourseSubscribedVideo csv where csv.course.id=" + id, CourseSubscribedVideo.class)
+		List<CourseSubscribedVideo> listOfCourseSubscribedVideos = session
+				.createQuery("SELECT csv FROM CourseSubscribedVideo csv where csv.course.id=" + id,
+						CourseSubscribedVideo.class)
 				.getResultList();
 		return listOfCourseSubscribedVideos;
 	}
 
-	
 	@Override
-	public String deleteCourseVideoMappingById(int id)  {
+	public String deleteCourseVideoMappingById(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
 		session.beginTransaction();
-			CourseSubscribedVideo courseSubscribedVideo = session.get(CourseSubscribedVideo.class, id);
-			if (courseSubscribedVideo != null) {
-				session.delete(courseSubscribedVideo);
-				session.getTransaction().commit();
-				session.close();
-				return "deletion successful";
-			} else
-				return "deletion failed as the requested object doesnt exists";
-		}
+		CourseSubscribedVideo courseSubscribedVideo = session.get(CourseSubscribedVideo.class, id);
+		if (courseSubscribedVideo != null) {
+			session.delete(courseSubscribedVideo);
+			session.getTransaction().commit();
+			session.close();
+			return "deletion successful";
+		} else
+			return "deletion failed as the requested object doesnt exists";
+	}
 
 	@Override
 	public String login(Login login) {
 		Session session = this.sessionFactory.getCurrentSession();
-		session.beginTransaction();
+		//session.beginTransaction();
 		// Query query=session.createQuery("SELECT login FROM Login login where
 		// login.userId=:userId");
 
@@ -235,6 +239,18 @@ public class CourseRepositoryImpl implements CourseRepository {
 
 	}
 
+	@Override
+	public Optional<User> loadUserByName(String name) {
+		Session session = this.sessionFactory.getCurrentSession();
+	//	session.beginTransaction();
+		List<User> users = session.createQuery("SELECT u FROM User u where u.userName='"+name+"'",User.class).getResultList();
+		List<Optional<User>> listOfUsers = new ArrayList<>();
+		for (User user : users) {
+    listOfUsers.add(Optional.of(user));
+}
+			Optional<User> user=listOfUsers.get(0);
+			return user;
+	}
 
 
 }

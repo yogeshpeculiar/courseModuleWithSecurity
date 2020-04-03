@@ -1,6 +1,7 @@
 package com.revature.coursems.domain;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -81,10 +84,11 @@ public class Course implements Serializable {
 	private String createdBy;
 	@Column(name = "modified_by")
 	private String modifiedBy;
-	@Column(name = "created_on")
-	private LocalDate createdOn;
-	@Column(name = "modified_on")
-	private LocalDate modifiedOn;
+
+	@Column(name = "created_on" )
+	private Timestamp createdOn;
+	@Column(name = "modified_on"  )
+	private Timestamp modifiedOn;
 	private int version;
 	
 	@Column(name = "completion_activity_points")
@@ -157,9 +161,7 @@ public class Course implements Serializable {
 		this.courseSubscribedVideo = courseSubscribedVideo;
 	}
 
-	public void setCreatedOn(LocalDate createdOn) {
-		this.createdOn = createdOn;
-	}
+	
 
 	public String getTag() {
 		return tag;
@@ -234,21 +236,7 @@ public class Course implements Serializable {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public LocalDate getCreatedOn() {
-		return createdOn;
-	}
 
-	public void setCratedOn(LocalDate createdOn) {
-		this.createdOn = createdOn;
-	}
-
-	public LocalDate getModifiedOn() {
-		return modifiedOn;
-	}
-
-	public void setModifiedOn(LocalDate modifiedOn) {
-		this.modifiedOn = modifiedOn;
-	}
 
 	public Level getLevelObj() {
 		return levelObj;
@@ -300,6 +288,22 @@ public class Course implements Serializable {
 				+ isPreSignUp + ", isSlugLogin=" + isSlugLogin + ", levelObj=" + levelObj + ", metaDesc=" + metaDesc
 				+ ", metaKey=" + metaKey + ", modifiedBy=" + modifiedBy + ", modifiedOn=" + modifiedOn + ", name="
 				+ name + ", slug=" + slug + ", tag=" + tag + ", version=" + version + "]";
+	}
+
+	public Timestamp getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(Timestamp createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public Timestamp getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(Timestamp modifiedOn) {
+		this.modifiedOn = modifiedOn;
 	}
 
 	
