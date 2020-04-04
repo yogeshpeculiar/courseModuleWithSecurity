@@ -31,5 +31,5 @@ public interface CourseRepository   {
 	public String login(Login login);
 	public List<CourseSubscribedVideo> viewVideoByCourseId(int id);
 	public String deleteCourseVideoMappingById(int id);
-	public Optional<User> loadUserByName(String name);
+	public User findUserByName(String name);
 }

@@ -18,7 +18,8 @@ public class User{
     private String password;
     @Column(name="is_active")
     private Boolean isActive;
-
+    @Column(name="roles")
+    private String role;
     public Integer getId() {
         return id;
     }
@@ -49,6 +50,14 @@ public class User{
 
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
     
     

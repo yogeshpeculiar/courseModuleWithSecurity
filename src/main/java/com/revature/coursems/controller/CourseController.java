@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-// import org.springframework.security.authentication.AuthenticationManager;
-// import org.springframework.security.authentication.BadCredentialsException;
-// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-// import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,9 +36,9 @@ import com.revature.coursems.domain.Level;
 import com.revature.coursems.domain.Video;
 import com.revature.coursems.domain.VideoCopy;
 import com.revature.coursems.domain.updateDTO;
-// import com.revature.coursems.securityConfig.MyUserDetailsService;
+import com.revature.coursems.securityConfig.MyUserDetailsService;
 import com.revature.coursems.service.CourseService;
-// import com.revature.coursems.util.JwtUtil;
+import com.revature.coursems.util.JwtUtil;
 
 import exception.BusinessServiceException;
 
@@ -48,12 +49,12 @@ import exception.BusinessServiceException;
 public class CourseController {
 	@Autowired
 	private CourseService courseService;
-	// @Autowired
-	// private AuthenticationManager authenticationManager;
-	// @Autowired 
-	// private MyUserDetailsService myUserDetailsService;
-	// @Autowired
-	// private JwtUtil jwtUtil;
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	@Autowired 
+	private MyUserDetailsService myUserDetailsService;
+	@Autowired
+	private JwtUtil jwtUtil;
 
 
 	//@ExceptionHandler(BusinessServiceException.class)
@@ -67,7 +68,9 @@ public class CourseController {
 	}
 
 	//@ExceptionHandler(BusinessServiceException.class)
+
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 	public ResponseEntity<?> view() throws BusinessServiceException {
 		List<Course> courseObj = courseService.findAllCourses();
 		return new ResponseEntity<>(courseObj, HttpStatus.OK);
@@ -134,21 +137,22 @@ public class CourseController {
 		List<CourseSubscribedVideo> listOfCourseSubscribedVideos=courseService.viewVideoByCourseId(id);
 		return new ResponseEntity<>(listOfCourseSubscribedVideos, HttpStatus.OK);
 	}
-	// @PostMapping("/authenticate")
-	// public  ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
+	@PostMapping("/authenticate")
+	public  ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
 	
-	// 	try
-	// 	{
-	// 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword()));
-	// 	}
-	// 	catch(BadCredentialsException e){
-	// 		throw new Exception("Incorrect Credentials..");
-	// 	}
-	// 	final UserDetails userDetails=myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-	// 	final String jwt= jwtUtil.generateToken(userDetails);
-	// 	return ResponseEntity.ok(new AuthenticationResponse(jwt));
+		try
+		{
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword()));
+		}
+		catch(BadCredentialsException e){
+			throw new Exception("Incorrect Credentials..");
+		}
+		System.out.println("contoller is called");
+		//  UserDetails userDetails=myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+		final String jwt= jwtUtil.generateToken(myUserDetailsService.userDetails);
+		return ResponseEntity.ok(new AuthenticationResponse(jwt));
 
-	// }
+	}
 
 	@DeleteMapping("deleteCourseVideoMappingById/{id}")
 	public ResponseEntity<?> deleteCourseVideoMappingById(@PathVariable int id) throws BusinessServiceException {

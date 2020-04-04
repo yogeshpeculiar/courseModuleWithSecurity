@@ -10,6 +10,7 @@ import com.revature.coursems.domain.Course;
 import com.revature.coursems.domain.CourseSubscribedVideo;
 import com.revature.coursems.domain.Level;
 import com.revature.coursems.domain.Login;
+import com.revature.coursems.domain.User;
 import com.revature.coursems.domain.Video;
 import com.revature.coursems.domain.updateDTO;
 import com.revature.coursems.repository.CourseRepository;
@@ -28,7 +29,7 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public void saveCourse(Course course) throws BusinessServiceException {
 		try {
-			Timestamp timestamp=new Timestamp(System.currentTimeMillis());
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			course.setCreatedOn(timestamp);
 			courseRepository.saveCourse(course);
 		} catch (DatabaseServiceException e) {
@@ -85,13 +86,13 @@ public class CourseServiceImpl implements CourseService {
 			course.setCreatedBy(updateDTOObj.getCreatedBy());
 			course.setModifiedBy(updateDTOObj.getModifiedBy());
 			course.setCreatedOn(updateDTOObj.getCreatedOn());
-			System.err.println("created time is:"+course.getCreatedOn());
+			System.err.println("created time is:" + course.getCreatedOn());
 			// course.setModifiedOn(updateDTOObj.getModifiedOn());
 			course.setVersion(updateDTOObj.getVersion());
 			course.setCompletionActivityPoints(updateDTOObj.getCompletionActivityPoints());
 			course.setEnrollmentActivityPoints(updateDTOObj.getEnrollmentActivityPoints());
-			
-			Timestamp timestamp=new Timestamp(System.currentTimeMillis());
+
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			course.setModifiedOn(timestamp);
 
 			courseRepository.update(course);
@@ -147,12 +148,18 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public List<CourseSubscribedVideo> viewVideoByCourseId(int id) {
-		
+
 		return courseRepository.viewVideoByCourseId(id);
 	}
 
 	@Override
 	public String deleteCourseVideoMappingById(int id) {
 		return courseRepository.deleteCourseVideoMappingById(id);
+	}
+
+	@Override
+	public User findUserByName(String userName) {
+		
+		return  courseRepository.findUserByName(userName); 
 	}
 }

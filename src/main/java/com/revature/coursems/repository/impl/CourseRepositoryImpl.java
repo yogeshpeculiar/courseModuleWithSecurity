@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mysql.cj.Query;
 import com.revature.coursems.domain.Category;
@@ -22,6 +23,7 @@ import com.revature.coursems.domain.User;
 import com.revature.coursems.domain.Video;
 
 import exception.DatabaseServiceException;
+
 
 @Repository
 public class CourseRepositoryImpl implements CourseRepository {
@@ -57,22 +59,19 @@ public class CourseRepositoryImpl implements CourseRepository {
 		}
 
 	}
-
+	
 	@Override
+	
 	public List<Course> findAllCourses() throws DatabaseServiceException {
 		Session session = this.sessionFactory.getCurrentSession();
 		try {
-			// return session.createQuery("SELECT cou FROM Course cou JOIN FETCH
-			// cou.categoryObj cat JOIN FETCH cou.levelObj lvl JOIN FETCH cou.docObj doc
-			// JOIN FETCH cou.courseSubscribedVideo csv",Course.class).getResultList();
 			List<Course> courses = session.createQuery(
 					"SELECT cou FROM Course cou JOIN FETCH cou.categoryObj cat JOIN FETCH cou.levelObj lvl",
 					Course.class).getResultList();
-			// List<Course> courses =session.createQuery("select cou from Course
-			// cou",Course.class).getResultList();
+			
 			System.err.println("courses=>" + courses);
 			return courses;
-			// return session.createQuery("From Course",Course.class).getResultList();
+			
 		} catch (HibernateException e) {
 			throw new DatabaseServiceException(e.getMessage());
 		}
@@ -102,7 +101,7 @@ public class CourseRepositoryImpl implements CourseRepository {
 			session.close();
 		}
 	}
-
+	//  @Transactional
 	@Override
 	public Course findCourseById(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
@@ -218,7 +217,7 @@ public class CourseRepositoryImpl implements CourseRepository {
 		} else
 			return "deletion failed as the requested object doesnt exists";
 	}
-
+	//@Transactional
 	@Override
 	public String login(Login login) {
 		Session session = this.sessionFactory.getCurrentSession();
@@ -239,17 +238,18 @@ public class CourseRepositoryImpl implements CourseRepository {
 
 	}
 
+	// @Transactional
 	@Override
-	public Optional<User> loadUserByName(String name) {
+	public User findUserByName(String name) {
+		// List<User> users = this.sessionFactory.getCurrentSession().createQuery("SELECT u FROM User u where u.userName='"+name+"'",User.class).getResultList();
+		// System.err.println(users.get(0).getRole());
+		
+		// return users.get(0);
 		Session session = this.sessionFactory.getCurrentSession();
-	//	session.beginTransaction();
+	
 		List<User> users = session.createQuery("SELECT u FROM User u where u.userName='"+name+"'",User.class).getResultList();
-		List<Optional<User>> listOfUsers = new ArrayList<>();
-		for (User user : users) {
-    listOfUsers.add(Optional.of(user));
-}
-			Optional<User> user=listOfUsers.get(0);
-			return user;
+		
+		return users.get(0);
 	}
 
 
