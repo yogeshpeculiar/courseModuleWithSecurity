@@ -17,13 +17,11 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import net.bytebuddy.agent.builder.AgentBuilder.InitializationStrategy.NoOp;
-
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
+    
     @Autowired
     private MyUserDetailsService myUserDetailService;
-    
     @Autowired
     JwtRequestFilter jwtRequestFilter;
     @Override
@@ -36,6 +34,12 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+       
+        return super.authenticationManagerBean();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -46,11 +50,6 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-       
-        return super.authenticationManagerBean();
-    }
+    
 
 }

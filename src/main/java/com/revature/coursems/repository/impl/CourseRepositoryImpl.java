@@ -1,8 +1,15 @@
 package com.revature.coursems.repository.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import com.revature.coursems.domain.Category;
+import com.revature.coursems.domain.Course;
+import com.revature.coursems.domain.CourseSubscribedVideo;
+import com.revature.coursems.domain.Doc;
+import com.revature.coursems.domain.Level;
+import com.revature.coursems.domain.Login;
+import com.revature.coursems.domain.User;
+import com.revature.coursems.repository.CourseRepository;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -11,21 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mysql.cj.Query;
-import com.revature.coursems.domain.Category;
-import com.revature.coursems.domain.Course;
-import com.revature.coursems.domain.CourseSubscribedVideo;
-import com.revature.coursems.domain.Doc;
-import com.revature.coursems.repository.CourseRepository;
-import com.revature.coursems.domain.Level;
-import com.revature.coursems.domain.Login;
-import com.revature.coursems.domain.User;
-import com.revature.coursems.domain.Video;
-
 import exception.DatabaseServiceException;
 
 
 @Repository
+
 public class CourseRepositoryImpl implements CourseRepository {
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -61,7 +58,7 @@ public class CourseRepositoryImpl implements CourseRepository {
 	}
 	
 	@Override
-	
+
 	public List<Course> findAllCourses() throws DatabaseServiceException {
 		Session session = this.sessionFactory.getCurrentSession();
 		try {
@@ -217,7 +214,7 @@ public class CourseRepositoryImpl implements CourseRepository {
 		} else
 			return "deletion failed as the requested object doesnt exists";
 	}
-	//@Transactional
+
 	@Override
 	public String login(Login login) {
 		Session session = this.sessionFactory.getCurrentSession();
@@ -238,7 +235,7 @@ public class CourseRepositoryImpl implements CourseRepository {
 
 	}
 
-	// @Transactional
+	
 	@Override
 	public User findUserByName(String name) {
 		// List<User> users = this.sessionFactory.getCurrentSession().createQuery("SELECT u FROM User u where u.userName='"+name+"'",User.class).getResultList();
@@ -247,9 +244,9 @@ public class CourseRepositoryImpl implements CourseRepository {
 		// return users.get(0);
 		Session session = this.sessionFactory.getCurrentSession();
 	
-		List<User> users = session.createQuery("SELECT u FROM User u where u.userName='"+name+"'",User.class).getResultList();
+		User user = session.createQuery("SELECT u FROM User u where u.userName='"+name+"'",User.class).getSingleResult();
 		
-		return users.get(0);
+		return user;
 	}
 
 

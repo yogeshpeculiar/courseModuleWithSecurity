@@ -35,17 +35,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String jwt=null;
 
         if(authorizationheader!=null && authorizationheader.startsWith("Bearer ")){ //takes header stating preceded by Bearer and a space
-            jwt=authorizationheader.substring(7);   //to exclude Beared 
+            jwt=authorizationheader.substring(7);   //to exclude Bearer 
             username=jwtutil.extractUsername(jwt);  //getting username fromm the jwt
         }
         if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null){ //the second condition makes sure that the security context does not already has a AUTHENTICATED user.
            System.out.println("filter is callled");
             UserDetails userDetails=userDetailsService.loadUserByUsername(username);
+            // System.out.println("service is called in filter"+userDetails.getUsername()+"---"+userDetails.getPassword());
            if(jwtutil.validateToken(jwt, userDetails)){
+            System.out.println("token is validated");
+
                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken=new UsernamePasswordAuthenticationToken(
                    userDetails, null, userDetails.getAuthorities());  //takes principal,credentials and authorities as args
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                System.out.println("token is validated");
+
            } 
         }
         filterChain.doFilter(request,response);

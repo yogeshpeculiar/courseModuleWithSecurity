@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.coursems.domain.Category;
 import com.revature.coursems.domain.Course;
@@ -156,10 +158,6 @@ public class CourseServiceImpl implements CourseService {
 	public String deleteCourseVideoMappingById(int id) {
 		return courseRepository.deleteCourseVideoMappingById(id);
 	}
-
-	@Override
-	public User findUserByName(String userName) {
-		
-		return  courseRepository.findUserByName(userName); 
-	}
+	
+	
 }

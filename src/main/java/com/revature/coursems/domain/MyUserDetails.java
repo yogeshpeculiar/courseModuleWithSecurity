@@ -20,7 +20,7 @@ public class MyUserDetails implements UserDetails {
 	private String username;
 	private String password;
 	private Boolean isactive;
-	private List<GrantedAuthority> authorities=new ArrayList();
+	private List<GrantedAuthority> authorities;
 	
 	
 	
